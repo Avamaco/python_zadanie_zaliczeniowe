@@ -10,7 +10,7 @@ def download_online_data():
     response = requests.get('https://api.um.warszawa.pl/api/action/busestrams_get', params=payload)
     current_datetime = str(datetime.datetime.now())
     dir_name = 'collected_data'
-    subdir_name = current_datetime[:10]        # YYYY-MM-DD
+    subdir_name = current_datetime[:10]                                          # YYYY-MM-DD
     file_name = current_datetime[11:19].replace(':', '-') + ".json"  # hh-mm-ss.json
     if not os.path.exists(os.path.join(dir_name, subdir_name)):
         os.makedirs(os.path.join(dir_name, subdir_name))
@@ -20,5 +20,28 @@ def download_online_data():
     out_file.close()
 
 
+def download_bus_stop_positions():
+    payload = {'id': 'ab75c33d-3a26-4342-b36a-6e5fef0a3ac3',
+               'apikey': '9d0f0f07-df51-4744-af50-a758edde8a00'}
+    response = requests.get('https://api.um.warszawa.pl/api/action/dbstore_get/?', params=payload)
+    dir_name = 'collected_data'
+    file_name = 'bus_stops.json'
+    out_file_path = os.path.join(dir_name, file_name)
+    out_file = open(out_file_path, 'w')
+    out_file.write(response.text)
+    out_file.close()
+
+
+def download_bus_routes():
+    payload = {'apikey': '9d0f0f07-df51-4744-af50-a758edde8a00'}
+    response = requests.get('https://api.um.warszawa.pl/api/action/public_transport_routes/?', params=payload)
+    dir_name = 'collected_data'
+    file_name = 'bus_routes.json'
+    out_file_path = os.path.join(dir_name, file_name)
+    out_file = open(out_file_path, 'w')
+    out_file.write(response.text)
+    out_file.close()
+
+
 if __name__ == "__main__":
-    download_online_data()
+    download_bus_routes()
