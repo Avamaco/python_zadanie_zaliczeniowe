@@ -36,7 +36,7 @@ def download_bus_routes():
     payload = {'apikey': '9d0f0f07-df51-4744-af50-a758edde8a00'}
     response = requests.get('https://api.um.warszawa.pl/api/action/public_transport_routes/?', params=payload)
     dir_name = 'collected_data'
-    file_name = 'bus_routes.json'
+    file_name = 'bus_line_routes.json'
     write_to_file(dir_name, file_name, response.text)
 
 
