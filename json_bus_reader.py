@@ -17,7 +17,9 @@ def find_bus_routes(day):
         for bus in data:
             key = (bus['VehicleNumber'])
             value = [bus['Lines'], bus['Time'], bus['Lon'], bus['Lat']]
-            bus_routes.setdefault(key, []).append(value)
+            modified_route = bus_routes.setdefault(key, [])
+            if not modified_route or modified_route[-1] != value:
+                modified_route.append(value)
 
     out_dir = 'processed_data'
     os.makedirs(out_dir, exist_ok=True)
