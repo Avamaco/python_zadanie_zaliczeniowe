@@ -16,7 +16,7 @@ def find_bus_routes(day):
             continue
         for bus in data:
             key = (bus['VehicleNumber'])
-            value = [bus['Lines'], bus['Time'], bus['Lat'], bus['Lon']]
+            value = {'Lines': bus['Lines'], 'Time': bus['Time'], 'Lat': bus['Lat'], 'Lon': bus['Lon']}
             modified_route = bus_routes.setdefault(key, [])
             if not modified_route or modified_route[-1] != value:
                 modified_route.append(value)
