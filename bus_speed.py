@@ -31,6 +31,7 @@ def calc_all_speeds(day):
     return data
 
 
-some_data = calc_all_speeds('2024-01-22')
-for b in some_data['1508']:
-    print(b.get('Speed'))
+if __name__ == '__main__':
+    some_data = calc_all_speeds('2024-01-22')
+    for b in some_data['1508']:
+        print(b.get('Speed'))

@@ -29,4 +29,5 @@ def find_bus_routes(day):
     out_file.close()
 
 
-find_bus_routes('2024-01-22')
+if __name__ == '__main__':
+    find_bus_routes('2024-01-22')
