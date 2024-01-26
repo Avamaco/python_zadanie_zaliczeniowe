@@ -1,5 +1,15 @@
 import json
 import os
+import bus_speed
+
+
+# This checks if the loaded data doesn't have any obvious mistakes.
+def data_makes_sense(this_reading, prev_reading):
+    if this_reading == prev_reading:
+        return False
+    if bus_speed.calc_speed(this_reading, prev_reading) > 100:
+        return False
+    return True
 
 
 def find_bus_routes(day):
@@ -18,7 +28,7 @@ def find_bus_routes(day):
             key = (bus['VehicleNumber'])
             value = {'Lines': bus['Lines'], 'Time': bus['Time'], 'Lat': bus['Lat'], 'Lon': bus['Lon']}
             modified_route = bus_routes.setdefault(key, [])
-            if not modified_route or modified_route[-1] != value:
+            if not modified_route or data_makes_sense(modified_route[-1], value):
                 modified_route.append(value)
 
     out_dir = 'processed_data'
