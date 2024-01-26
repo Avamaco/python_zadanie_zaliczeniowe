@@ -1,6 +1,8 @@
 import requests
 import os
 import datetime
+import json
+import csv
 
 
 def write_to_file(directory_path, file_name, text):
@@ -8,6 +10,20 @@ def write_to_file(directory_path, file_name, text):
     out_file_path = os.path.join(directory_path, file_name)
     out_file = open(out_file_path, 'w')
     out_file.write(text)
+    out_file.close()
+
+
+def write_csv(directory_path, file_name, json_text):
+    data = json.loads(json_text)["result"]
+    if not isinstance(data, list) or not data:
+        return
+    os.makedirs(directory_path, exist_ok=True)
+    out_file_path = os.path.join(directory_path, file_name)
+    out_file = open(out_file_path, 'w', newline='')
+    writer = csv.writer(out_file)
+    writer.writerow(data[0].keys())
+    for d in data:
+        writer.writerow(d.values())
     out_file.close()
 
 
@@ -19,8 +35,8 @@ def download_online_data():
     current_datetime = str(datetime.datetime.now())
     dir_name = 'collected_data'
     subdir_name = current_datetime[:10]                                          # YYYY-MM-DD
-    file_name = current_datetime[11:19].replace(':', '-') + ".json"  # hh-mm-ss.json
-    write_to_file(os.path.join(dir_name, subdir_name), file_name, response.text)
+    file_name = current_datetime[11:19].replace(':', '-') + ".csv"  # hh-mm-ss.csv
+    write_csv(os.path.join(dir_name, subdir_name), file_name, response.text)
 
 
 def download_bus_stop_positions():
@@ -54,4 +70,4 @@ def download_timetable(busstop_id, busstop_nr, line):
 
 
 if __name__ == "__main__":
-    download_timetable('3134', '01', '504')
+    pass
