@@ -2,36 +2,39 @@ import json
 import os
 from geopy import distance
 import datetime
+import pandas
 
 
-def calc_speed(bus_data1, bus_data2):
-    pos1 = (float(bus_data1['Lat']), float(bus_data1['Lon']))
-    pos2 = (float(bus_data2['Lat']), float(bus_data2['Lon']))
-    time1 = datetime.datetime.fromisoformat(bus_data1['Time'])
-    time2 = datetime.datetime.fromisoformat(bus_data2['Time'])
+def seconds_passed(time1, time2):
+    time1 = datetime.datetime.fromisoformat(time1)
+    time2 = datetime.datetime.fromisoformat(time2)
     time_delta = time2 - time1
-    seconds = time_delta.total_seconds()
-    meters = distance.distance(pos1, pos2).meters
-    mps = meters / seconds
-    return mps * 3.6       # m/s to km/h
+    return time_delta.total_seconds()
 
 
-def calc_all_speeds(day):
-    file_path = os.path.join('processed_data', day + '.json')
-    if not os.path.exists(file_path):
-        print("File " + file_path + "does not exist.")
-        return
-    in_file = open(file_path, 'r')
-    data = json.load(in_file)
-    in_file.close()
-    for key, value in data.items():
-        for i in range(len(value) - 1):
-            speed = calc_speed(value[i], value[i + 1])
-            value[i]['Speed'] = speed
-    return data
+def dist_in_meters(lat1, lon1, lat2, lon2):
+    return distance.distance((lat1, lon1), (lat2, lon2)).meters
 
 
-if __name__ == '__main__':
-    some_data = calc_all_speeds('2024-01-22')
-    for b in some_data['1508']:
-        print(b.get('Speed'))
+def speed_in_kmh(meters, seconds):
+    return meters / seconds * 3.6
+
+
+def calc_seconds_passed(df):
+    return [seconds_passed(t2, t1) for t1, t2 in zip(df.Time, df.Time.shift(fill_value="2000-01-01 08:00:00"))]
+
+
+def calc_dist(df):
+    return [dist_in_meters(lat1, lon1, lat2, lon2)
+            for lat1, lon1, lat2, lon2
+            in zip(df.Lat, df.Lon, df.Lat.shift(fill_value=0), df.Lon.shift(fill_value=0))]
+
+
+def calc_speed(df):
+    return speed_in_kmh(df.MetersPassed, df.SecondsPassed)
+
+
+def calc_all(df):
+    df["SecondsPassed"] = calc_seconds_passed(df)
+    df["MetersPassed"] = calc_dist(df)
+    df["Speed"] = calc_speed(df)
