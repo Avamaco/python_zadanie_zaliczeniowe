@@ -1,6 +1,7 @@
 import create_dataframe
 import bus_speed
 import plotly.express as px
+import pandas
 
 
 def is_speed_correct(df):
@@ -9,10 +10,20 @@ def is_speed_correct(df):
             & (df["SecondsPassed"] <= 150))
 
 
-def show_speed_map():
-    df = create_dataframe.combine_into_df("2024-01-22", "07-34-22.csv", "07-37-23.csv")
-    bus_speed.calc_all(df)
-    speed_data = df.loc[is_speed_correct(df)]
+def read_and_calc_data():
+    morning = create_dataframe.combine_into_df("2024-01-30", "10-00-07.csv", "11-00-59.csv")
+    rush_hour = create_dataframe.combine_into_df("2024-01-30", "15-03-46.csv", "16-03-09.csv")
+    evening = create_dataframe.combine_into_df("2024-01-30", "19-59-14.csv", "21-00-11.csv")
+    bus_speed.calc_all(morning)
+    bus_speed.calc_all(rush_hour)
+    bus_speed.calc_all(evening)
+    morning = morning.loc[is_speed_correct(morning)]
+    rush_hour = rush_hour.loc[is_speed_correct(rush_hour)]
+    evening = evening.loc[is_speed_correct(evening)]
+    return morning, rush_hour, evening
+
+
+def show_speed_map(speed_data):
     lat_median = speed_data["Lat"].median()
     lon_median = speed_data["Lon"].median()
     fig = px.density_mapbox(speed_data.loc[speed_data["Speed"] > 50], lat='Lat', lon='Lon', z='Speed', radius=10,
@@ -22,4 +33,10 @@ def show_speed_map():
 
 
 if __name__ == "__main__":
-    show_speed_map()
+    morning, rush_hour, evening = read_and_calc_data()
+    all_data = pandas.concat((morning, rush_hour, evening))
+    show_speed_map(all_data)
+    print("Liczba autobusów, które przekroczyły 50 km/h: " + str(len(all_data.loc[all_data["Speed"] > 50])))
+    print("Szybkość średnia rano: " + str(morning["Speed"].mean()))
+    print("Szybkość średnia w godzinach szczytu: " + str(rush_hour["Speed"].mean()))
+    print("Szybkość średnia wieczorem: " + str(evening["Speed"].mean()))

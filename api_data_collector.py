@@ -1,3 +1,5 @@
+import time
+
 import requests
 import os
 import datetime
@@ -70,4 +72,6 @@ def download_timetable(busstop_id, busstop_nr, line):
 
 
 if __name__ == "__main__":
-    pass
+    for i in range(120):
+        download_online_data()
+        time.sleep(30)
