@@ -2,7 +2,6 @@ import json
 from geopy import distance
 import pandas
 import os
-import plotly.express as px
 
 
 def get_bus_stop_dict():
@@ -39,12 +38,24 @@ def get_route_lists():
 
 def get_closest_stops(lat, lon, line, bus_lists, stop_pos):
     line_lists = bus_lists[line]
-    distances = [[distance.distance(stop_pos[s], (lat, lon)) for s in route] for route in line_lists]
-    closest_ids = [min(range(len(route)), key=route.__getitem__) for route in distances]
-    return [(line_lists[i][closest_ids[i]], distances[i][closest_ids[i]]) for i in range(len(line_lists))]
+    distances = [[distance.distance(stop_pos[s], (lat, lon)).meters for s in route] for route in line_lists]
+    closest_ids = [min(range(len(route) - 1), key=route.__getitem__) for route in distances]
+    return [(line_lists[i][closest_ids[i]], distances[i][closest_ids[i]],
+             line_lists[i][closest_ids[i] + 1], distances[i][closest_ids[i] + 1]) for i in range(len(line_lists))]
+
+
+def predict_closest_stop(new_stops, old_stops):
+    for i in range(len(new_stops)):
+        if new_stops[i][0][0] == old_stops[i][1][0]:  # old next stop is now the closest
+            return new_stops[i][0]
+    for i in range(len(new_stops)):
+        if new_stops[i][1][0] == old_stops[i][1][0] and new_stops[i][1][1] < old_stops[i][1][1]:  # next stop is closer
+            return new_stops[i][0]
+    return None  # cannot predict the closest stop
 
 
 if __name__ == "__main__":
     stops = get_bus_stop_dict()
-    my504 = get_route_lists()["504"]
+    routes = get_route_lists()
+    my504 = routes["504"]
     print(my504)
