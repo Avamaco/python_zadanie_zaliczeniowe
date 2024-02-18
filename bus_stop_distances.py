@@ -77,4 +77,4 @@ if __name__ == "__main__":
     closest_bus_stops = df_closest_stop(morning).dropna()
     print(len(closest_bus_stops))
     out_path = os.path.join("processed_data", "dist-2024-01-30.csv")
-    closest_bus_stops.to_csv(out_path)
+    closest_bus_stops.to_csv(out_path, index=False)
