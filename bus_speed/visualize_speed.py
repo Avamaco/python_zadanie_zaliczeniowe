@@ -1,5 +1,5 @@
-import create_dataframe
-import bus_speed
+from bus_data import create_dataframe
+from bus_speed import speed
 import plotly.express as px
 import pandas
 
@@ -8,12 +8,12 @@ def read_and_calc_data():
     morning = create_dataframe.combine_into_df("2024-01-30", "10-00-07.csv", "11-00-59.csv")
     rush_hour = create_dataframe.combine_into_df("2024-01-30", "15-03-46.csv", "16-03-09.csv")
     evening = create_dataframe.combine_into_df("2024-01-30", "19-59-14.csv", "21-00-11.csv")
-    bus_speed.calc_all(morning)
-    bus_speed.calc_all(rush_hour)
-    bus_speed.calc_all(evening)
-    morning = bus_speed.cut_incorrect_speed(morning)
-    rush_hour = bus_speed.cut_incorrect_speed(rush_hour)
-    evening = bus_speed.cut_incorrect_speed(evening)
+    speed.calc_all(morning)
+    speed.calc_all(rush_hour)
+    speed.calc_all(evening)
+    morning = speed.cut_incorrect_speed(morning)
+    rush_hour = speed.cut_incorrect_speed(rush_hour)
+    evening = speed.cut_incorrect_speed(evening)
     return morning, rush_hour, evening
 
 

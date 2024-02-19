@@ -3,11 +3,11 @@ from geopy import distance
 import pandas
 import os
 
-import create_dataframe
+from bus_data import create_dataframe
 
 
 def get_bus_stop_dict():
-    in_file_path = os.path.join("collected_data", "bus_stops.json")
+    in_file_path = os.path.join("../collected_data", "bus_stops.json")
     in_file = open(in_file_path, 'r')
     json_data = json.load(in_file)
     in_file.close()
@@ -19,7 +19,7 @@ def get_bus_stop_dict():
 
 
 def get_route_lists():
-    in_file_path = os.path.join("collected_data", "bus_line_routes.json")
+    in_file_path = os.path.join("../collected_data", "bus_line_routes.json")
     in_file = open(in_file_path, 'r')
     json_data = json.load(in_file)
     in_file.close()
@@ -76,5 +76,5 @@ if __name__ == "__main__":
     print(len(morning))
     closest_bus_stops = df_closest_stop(morning).dropna()
     print(len(closest_bus_stops))
-    out_path = os.path.join("processed_data", "dist-2024-01-30.csv")
+    out_path = os.path.join("../processed_data", "dist-2024-01-30.csv")
     closest_bus_stops.to_csv(out_path, index=False)

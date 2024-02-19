@@ -1,5 +1,4 @@
 import time
-
 import requests
 import os
 import datetime
@@ -35,7 +34,7 @@ def download_online_data():
                'type': '1'}
     response = requests.get('https://api.um.warszawa.pl/api/action/busestrams_get', params=payload)
     current_datetime = str(datetime.datetime.now())
-    dir_name = 'collected_data'
+    dir_name = '../collected_data'
     subdir_name = current_datetime[:10]                                          # YYYY-MM-DD
     file_name = current_datetime[11:19].replace(':', '-') + ".csv"  # hh-mm-ss.csv
     write_csv(os.path.join(dir_name, subdir_name), file_name, response.text)
@@ -45,7 +44,7 @@ def download_bus_stop_positions():
     payload = {'id': 'ab75c33d-3a26-4342-b36a-6e5fef0a3ac3',
                'apikey': '9d0f0f07-df51-4744-af50-a758edde8a00'}
     response = requests.get('https://api.um.warszawa.pl/api/action/dbstore_get/?', params=payload)
-    dir_name = 'collected_data'
+    dir_name = '../collected_data'
     file_name = 'bus_stops.json'
     write_to_file(dir_name, file_name, response.text)
 
@@ -53,7 +52,7 @@ def download_bus_stop_positions():
 def download_bus_routes():
     payload = {'apikey': '9d0f0f07-df51-4744-af50-a758edde8a00'}
     response = requests.get('https://api.um.warszawa.pl/api/action/public_transport_routes/?', params=payload)
-    dir_name = 'collected_data'
+    dir_name = '../collected_data'
     file_name = 'bus_line_routes.json'
     write_to_file(dir_name, file_name, response.text)
 
@@ -65,7 +64,7 @@ def download_timetable(busstop_id, busstop_nr, line):
                'busstopNr': busstop_nr,
                'line': line}
     response = requests.get('https://api.um.warszawa.pl/api/action/dbtimetable_get/?', params=payload)
-    dir_name = 'collected_data'
+    dir_name = '../collected_data'
     subdir_name = 'timetables'
     file_name = busstop_id + '_' + busstop_nr + '_' + line + '.json'
     write_to_file(os.path.join(dir_name, subdir_name), file_name, response.text)

@@ -1,16 +1,16 @@
 import pandas
 import plotly.express as px
-import bus_stop_distances
-import bus_delays
+from bus_delays import bus_stop_distances
+from bus_delays import delays
 
 
 def get_avg_delay(df):
-    avg_delay = arrival_data.groupby(["BusstopId", "BusstopNr"])["Delay"].mean()
+    avg_delay = df.groupby(["BusstopId", "BusstopNr"])["Delay"].mean()
     return pandas.DataFrame({
-        "BusstopId": arrival_data["BusstopId"],
-        "BusstopNr": arrival_data["BusstopNr"],
+        "BusstopId": df["BusstopId"],
+        "BusstopNr": df["BusstopNr"],
         "AvgDelay": [avg_delay.to_dict()[(busstop_id, busstop_nr)]
-                     for busstop_id, busstop_nr in zip(arrival_data["BusstopId"], arrival_data["BusstopNr"])]
+                     for busstop_id, busstop_nr in zip(df["BusstopId"], df["BusstopNr"])]
     }).drop_duplicates()
 
 
@@ -34,8 +34,8 @@ def show_delay_map(df):
 
 
 if __name__ == "__main__":
-    arrival_data = bus_delays.get_arrivals()
-    arrival_data = bus_delays.find_all_delays(arrival_data)
+    arrival_data = delays.get_arrivals()
+    arrival_data = delays.find_all_delays(arrival_data)
     bus_stop_delays = get_avg_delay(arrival_data)
     add_bus_stop_pos(bus_stop_delays)
     show_delay_map(bus_stop_delays)

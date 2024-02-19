@@ -1,8 +1,5 @@
-import json
-import os
 from geopy import distance
 import datetime
-import pandas
 
 
 def seconds_passed(time1, time2):
