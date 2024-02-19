@@ -71,10 +71,12 @@ def df_closest_stop(df):
     return df
 
 
-if __name__ == "__main__":
-    morning = create_dataframe.combine_into_df("2024-01-30", "10-00-07.csv", "11-00-59.csv")
-    print(len(morning))
-    closest_bus_stops = df_closest_stop(morning).dropna()
-    print(len(closest_bus_stops))
-    out_path = os.path.join("../processed_data", "dist-2024-01-30.csv")
+def create_dist_file(day, first_reading, last_reading, file_name):
+    data = create_dataframe.combine_into_df(day, first_reading, last_reading)
+    closest_bus_stops = df_closest_stop(data).dropna()
+    out_path = os.path.join("../processed_data", "dist-" + file_name + ".csv")
     closest_bus_stops.to_csv(out_path, index=False)
+
+
+if __name__ == "__main__":
+    create_dist_file("2024-01-30", "10-00-07.csv", "11-00-59.csv", "2024-01-30")

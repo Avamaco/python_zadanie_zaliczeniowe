@@ -9,8 +9,8 @@ def arrived(df):
     return [x < 15 for x in dist]
 
 
-def get_arriving_buses():
-    in_path = os.path.join("../processed_data", "dist-2024-01-30.csv")
+def get_arriving_buses(file_name):
+    in_path = os.path.join("../processed_data", "dist-" + file_name + ".csv")
     df = pandas.read_csv(in_path)
     df["ClosestStop"] = [literal_eval(s) for s in df["ClosestStop"]]
     speed.calc_all(df)
@@ -20,18 +20,18 @@ def get_arriving_buses():
     return df
 
 
-def save_arrivals(df):
-    data = {
+def save_arrivals(df, file_name):
+    data_dict = {
         "BusstopId": [tup[0][0] for tup in df["ClosestStop"]],
         "BusstopNr": [tup[0][1] for tup in df["ClosestStop"]],
         "Line": df["Lines"],
         "Time": df["Time"]
     }
-    to_save = pandas.DataFrame(data)
-    out_path = os.path.join("../processed_data", "arrivals-2024-01-30.csv")
+    to_save = pandas.DataFrame(data_dict)
+    out_path = os.path.join("../processed_data", "arrivals-" + file_name + ".csv")
     to_save.to_csv(out_path, index=False)
 
 
 if __name__ == "__main__":
-    df = get_arriving_buses()
-    save_arrivals(df)
+    data = get_arriving_buses("2024-01-30")
+    save_arrivals(data, "2024-01-30")
