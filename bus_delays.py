@@ -7,6 +7,10 @@ import pandas
 from api_data_collector import download_timetable
 
 
+MIN_DELAY = -60
+MAX_DELAY = 1200
+
+
 def timetable_missing(busstop_id, busstop_nr, line):
     file_name = busstop_id + '_' + busstop_nr + '_' + line + '.json'
     path = os.path.join("collected_data", "timetables", file_name)
@@ -60,16 +64,16 @@ def find_delay(bus_time, timetable):
             timetable[i] = str(int(timetable[i][:2]) - 24).zfill(2) + timetable[i][2:]
         time2 = datetime.datetime.fromisoformat(day + timetable[i])
         delay = (time1 - time2).total_seconds()
-        if (delay > 0):
+        if delay > MIN_DELAY:
             return delay
-    return -1
+    return MIN_DELAY - 1
 
 
 def find_all_delays(df):
     df["Delay"] = [find_delay(bus_time, get_times(busstop_id, str(busstop_nr).zfill(2), line))
                    for busstop_id, busstop_nr, line, bus_time
                    in df.values.tolist()]
-    return df.loc[df["Delay"] < 1200].loc[df["Delay"] > -1]
+    return df.loc[df["Delay"] < MAX_DELAY].loc[df["Delay"] > MIN_DELAY]
 
 
 if __name__ == "__main__":
@@ -78,4 +82,3 @@ if __name__ == "__main__":
     arrivals = find_all_delays(arrivals)
     print(arrivals)
     print(arrivals["Delay"].median())
-
