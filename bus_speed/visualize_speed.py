@@ -4,17 +4,10 @@ import plotly.express as px
 import pandas
 
 
-def read_and_calc_data():
-    morning = create_dataframe.combine_into_df("2024-01-30", "10-00-07.csv", "11-00-59.csv")
-    rush_hour = create_dataframe.combine_into_df("2024-01-30", "15-03-46.csv", "16-03-09.csv")
-    evening = create_dataframe.combine_into_df("2024-01-30", "19-59-14.csv", "21-00-11.csv")
-    speed.calc_all(morning)
-    speed.calc_all(rush_hour)
-    speed.calc_all(evening)
-    morning = speed.cut_incorrect_speed(morning)
-    rush_hour = speed.cut_incorrect_speed(rush_hour)
-    evening = speed.cut_incorrect_speed(evening)
-    return morning, rush_hour, evening
+def read_and_calc_data(day, first_reading, last_reading):
+    df = create_dataframe.combine_into_df(day, first_reading, last_reading)
+    speed.calc_all(df)
+    return speed.cut_incorrect_speed(df)
 
 
 def show_speed_map(speed_data):
@@ -27,7 +20,9 @@ def show_speed_map(speed_data):
 
 
 if __name__ == "__main__":
-    morning, rush_hour, evening = read_and_calc_data()
+    morning = read_and_calc_data("2024-01-30", "10-00-07.csv", "11-00-59.csv")
+    rush_hour = read_and_calc_data("2024-01-30", "15-03-46.csv", "16-03-09.csv")
+    evening = read_and_calc_data("2024-01-30", "19-59-14.csv", "21-00-11.csv")
     all_data = pandas.concat((morning, rush_hour, evening))
     show_speed_map(all_data)
     print("Liczba autobusów, które przekroczyły 50 km/h: " + str(len(all_data.loc[all_data["Speed"] > 50])))
