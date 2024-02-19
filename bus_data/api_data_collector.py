@@ -70,7 +70,16 @@ def download_timetable(busstop_id, busstop_nr, line):
     write_to_file(os.path.join(dir_name, subdir_name), file_name, response.text)
 
 
-if __name__ == "__main__":
-    for i in range(120):
+def collect_online(how_much, delay):
+    print("Downloading online data " + str(how_much) + " times....")
+    print("%06d" % 0, end="")
+    for i in range(how_much):
         download_online_data()
-        time.sleep(30)
+        print("\b\b\b\b\b\b", end="")
+        print("%06d" % (i + 1), end="")
+        time.sleep(delay)
+    print("\nFinished!")
+
+
+if __name__ == "__main__":
+    collect_online(120, 30)
