@@ -1,7 +1,6 @@
 import pandas
 import plotly.express as px
-from bus_delays import bus_stop_distances
-from bus_delays import delays
+from zadanie_zaliczeniowe.warsaw_buses.bus_delays import bus_stop_distances, delays
 
 
 def get_avg_delay(df):

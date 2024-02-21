@@ -3,7 +3,7 @@ import time
 import json
 import datetime
 import pandas
-from bus_data.api_data_collector import download_timetable
+from zadanie_zaliczeniowe.warsaw_buses.bus_data.api_data_collector import download_timetable
 
 
 MIN_DELAY = -60
@@ -12,7 +12,7 @@ MAX_DELAY = 1200
 
 def timetable_missing(busstop_id, busstop_nr, line):
     file_name = busstop_id + '_' + busstop_nr + '_' + line + '.json'
-    path = os.path.join("../collected_data", "timetables", file_name)
+    path = os.path.join("../../../collected_data", "timetables", file_name)
     if not os.path.exists(path):
         return True
     file = open(path, "r")
@@ -39,14 +39,14 @@ def download_required_timetables(df):
 
 
 def get_arrivals():
-    in_path = os.path.join("../processed_data", "arrivals-2024-01-30.csv")
+    in_path = os.path.join("../../../processed_data", "arrivals-2024-01-30.csv")
     df = pandas.read_csv(in_path)
     return df
 
 
 def get_times(busstop_id, busstop_nr, line):
     file_name = busstop_id + "_" + busstop_nr + "_" + line + ".json"
-    in_file_path = os.path.join("../collected_data", "timetables", file_name)
+    in_file_path = os.path.join("../../../collected_data", "timetables", file_name)
     if not os.path.exists(in_file_path):
         return None
     in_file = open(in_file_path, 'r')

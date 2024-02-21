@@ -1,5 +1,5 @@
-from bus_data import create_dataframe
-from bus_speed import speed
+from zadanie_zaliczeniowe.warsaw_buses.bus_data import create_dataframe
+from zadanie_zaliczeniowe.warsaw_buses.bus_speed import speed
 import plotly.express as px
 import pandas
 

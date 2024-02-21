@@ -1,6 +1,6 @@
 import pandas
 import os
-from bus_speed import speed
+from zadanie_zaliczeniowe.warsaw_buses.bus_speed import speed
 from ast import literal_eval
 
 
@@ -10,7 +10,7 @@ def arrived(df):
 
 
 def get_arriving_buses(file_name):
-    in_path = os.path.join("../processed_data", "dist-" + file_name + ".csv")
+    in_path = os.path.join("../../../processed_data", "dist-" + file_name + ".csv")
     df = pandas.read_csv(in_path)
     df["ClosestStop"] = [literal_eval(s) for s in df["ClosestStop"]]
     speed.calc_all(df)
@@ -28,7 +28,7 @@ def save_arrivals(df, file_name):
         "Time": df["Time"]
     }
     to_save = pandas.DataFrame(data_dict)
-    out_path = os.path.join("../processed_data", "arrivals-" + file_name + ".csv")
+    out_path = os.path.join("../../../processed_data", "arrivals-" + file_name + ".csv")
     to_save.to_csv(out_path, index=False)
 
 

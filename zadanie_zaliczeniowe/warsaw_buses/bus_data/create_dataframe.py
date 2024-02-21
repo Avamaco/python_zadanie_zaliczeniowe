@@ -3,7 +3,7 @@ import pandas
 
 
 def combine_into_df(day, first_reading, last_reading):
-    dir_path = os.path.join('../collected_data', day)
+    dir_path = os.path.join('../../../collected_data', day)
     if not os.path.exists(dir_path):
         print("Directory " + dir_path + "does not exist.")
         return

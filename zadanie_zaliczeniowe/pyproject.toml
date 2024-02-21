@@ -1,0 +1,15 @@
+[project]
+name = "warsaw_buses"
+version = "0.0.1"
+authors = [
+  { name="Maciej Curulak"},
+]
+description = "A package for analysing data about buses in Warsaw"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "plotly",
+    "geopy",
+    "requests",
+]
