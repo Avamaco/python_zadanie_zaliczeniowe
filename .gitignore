@@ -2,4 +2,6 @@
 /.idea/
 /collected_data/
 /processed_data/
+/zadanie_zaliczeniowe/dist/
+/zadanie_zaliczeniowe/warsaw_buses.egg-info
 temp.py
